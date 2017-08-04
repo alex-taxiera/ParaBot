@@ -1,0 +1,38 @@
+{
+  "name": "parabot",
+  "version": "0.0.0",
+  "description": "Paragon API bot",
+  "main": "ParaBot.js",
+  "dependencies": {
+    "colors": "^1.1.2",
+    "discordie": "^0.11.0",
+    "fs": "0.0.1-security",
+    "moment": "^2.18.1",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.1",
+    "seedrandom": "^2.4.3"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0",
+    "standard": "^10.0.2"
+  },
+  "scripts": {
+    "start": "nodemon ParaBot.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alex-taxiera/ParaBot.git"
+  },
+  "author": "Alex Taxiera",
+  "keywords": [
+    "Paragon",
+    "game",
+    "Discord",
+    "JavaScript"
+  ],
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/alex-taxiera/ParaBot/issues"
+  },
+  "homepage": "https://github.com/alex-taxiera/ParaBot"
+}
