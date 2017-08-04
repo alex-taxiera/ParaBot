@@ -10,8 +10,6 @@ module.exports = {
     if (!isNaN(params[params.length - 1])) {
       level = params.pop()
     }
-    // change the getters to take params
-    // check last param in card for number
     let heroId = api.getHero(text)
     let cardId = api.getCard(params)
 
@@ -38,7 +36,7 @@ module.exports = {
     }
 
     if (func.can(['MANAGE_MESSAGES'], msg.channel)) {
-      setTimeout(function () { msg.delete() }, 5000)
+      msg.delete()
     }
   }
 }
