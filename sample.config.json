@@ -1,0 +1,7 @@
+{
+  "token": "bot_token",
+  "id": "client_id",
+  "secret": "client_secret",
+  "paragonKey": "paragon_api_key",
+  "games": ["Paragon", "Fortnite", "Unreal Tournament", "Shadow Complex"]
+}

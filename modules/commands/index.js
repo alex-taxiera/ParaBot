@@ -1,0 +1,8 @@
+exports.help = require('./help')
+exports.hero = require('./hero.js')
+exports.stats = require('./stats.js')
+exports.skills = require('./skills.js')
+exports.card = require('./card.js')
+// exports.login = require('./login.js')
+// exports.logout = require('./logout.js')
+// exports.deck = require('./deck.js')
