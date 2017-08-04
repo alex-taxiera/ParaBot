@@ -11,7 +11,7 @@ var baseReq = req.defaults({
 
 module.exports = new Class.Command(
   'heroBasic',
-  'Display basic hero info (*murdock)',
+  'Display basic hero info (-murdock)',
   [],
   function (msg, hero) {
     baseReq(`hero/${hero}`)
