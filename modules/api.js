@@ -21,7 +21,7 @@ module.exports = {
       })
     })
     .catch((err) => {
-      func.log('error getting heroes', err.message)
+      func.log('error getting heroes', 'red', err.message)
     })
     baseReq('cards')
     .then((response) => {
@@ -30,7 +30,7 @@ module.exports = {
       })
     })
     .catch((err) => {
-      func.log('error getting cards', err.message)
+      func.log('error getting cards', 'red', err.message)
     })
   },
   getHero: function (query) {
