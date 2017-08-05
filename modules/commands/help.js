@@ -5,7 +5,6 @@ module.exports = new Class.Command(
   'Displays this message, duh!',
   [],
   function (msg, commands) {
-    console.log(commands)
     let str = 'Available commands:'
     for (let key in commands) {
       if (!commands.hasOwnProperty(key)) {
