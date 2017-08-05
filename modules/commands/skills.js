@@ -47,6 +47,14 @@ module.exports = new Class.Command(
                 return `${stats[p]}`
               } else {
                 switch (p) {
+                  case 'status:stun':
+                    return '__Stun__'
+                  case 'status:root':
+                    return '__Root__'
+                  case 'status:slow':
+                    return '__Slow__'
+                  case 'status:bleed':
+                    return '__Bleed__'
                   case 'attr:physdmg':
                     return '__Physical Damage__'
                   case 'attr:endmg':
