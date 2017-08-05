@@ -11,8 +11,8 @@ let baseReq = req.defaults({
 
 module.exports = new Class.Command(
   'stats',
-  'Display hero base stats, default level is 15',
-  ['hero name, level optional'],
+  'Display hero base stats',
+  ['hero name, level optional (default level is max)'],
   function (msg, params, level) {
     let fullParam = params.join(' ')
     let hero = api.getHero(fullParam)

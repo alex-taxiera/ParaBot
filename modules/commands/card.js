@@ -14,7 +14,7 @@ let baseReq = req.defaults({
 module.exports = new Class.Command(
   'card',
   'Display card info (-outlander scout 5)',
-  ['level optional, defaults tto 10'],
+  ['level optional (default level is max)'],
   function (msg, card, level) {
     baseReq(`card/${card}`)
     .then((response) => {
