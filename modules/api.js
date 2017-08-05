@@ -53,5 +53,24 @@ module.exports = {
       }
       tmp = iter.next().value
     }
+  },
+  stringReplace: {
+    'status:stun': '__Stun__',
+    'status:root': '__Root__',
+    'status:slow': '__Slow__',
+    'status:bleed': '__Bleed__',
+    'attr:physdmg': '__Physical Damage__',
+    'attr:endmg': '__Energy Damage__',
+    'attr:physar': '__Physical Armor__',
+    'attr:enar': '__Energy Armor__',
+    'attr:shld': '__Shield__',
+    'attr:spd': '__Speed__',
+    'attr:hpgen': '__Health Regen__',
+    'attr:mpgen': '__Mana Regen__',
+    'attr:mp': '__Mana__',
+    'attr:hp': '__Health__',
+    'attr:lfstl': '__Lifesteal__',
+    'attr:physpen': '__Physical Penetration__',
+    'attr:enpen': '__Energy Penetration__'
   }
 }

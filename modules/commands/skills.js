@@ -42,49 +42,14 @@ module.exports = new Class.Command(
                 }
               }
             })
-            skill += desc.replace(/\{([^}]+)\}/g, (match, p) => {
+            skill += desc.replace(/\{(.+?)}/g, (match, p) => {
               if (stats[p]) {
                 return `${stats[p]}`
+              } else if (api.stringReplace[p]) {
+                return api.stringReplace[p]
               } else {
-                switch (p) {
-                  case 'status:stun':
-                    return '__Stun__'
-                  case 'status:root':
-                    return '__Root__'
-                  case 'status:slow':
-                    return '__Slow__'
-                  case 'status:bleed':
-                    return '__Bleed__'
-                  case 'attr:physdmg':
-                    return '__Physical Damage__'
-                  case 'attr:endmg':
-                    return '__Energy Damage__'
-                  case 'attr:physar':
-                    return '__Physical Armor__'
-                  case 'attr:enar':
-                    return '__Energy Armor__'
-                  case 'attr:shld':
-                    return '__Shield__'
-                  case 'attr:spd':
-                    return '__Speed__'
-                  case 'attr:hpgen':
-                    return '__Health Regen__'
-                  case 'attr:mpgen':
-                    return '__Mana Regen__'
-                  case 'attr:mp':
-                    return '__Mana__'
-                  case 'attr:hp':
-                    return '__Health__'
-                  case 'attr:lfstl':
-                    return '__Lifesteal__'
-                  case 'attr:physpen':
-                    return '__Physical Penetration__'
-                  case 'attr:enpen':
-                    return '__Energy Penetration__'
-                  default:
-                    func.log(`no attribute ${p}`, 'red')
-                    return p
-                }
+                func.log(`no attribute ${p}`, 'red')
+                return p
               }
             })
             if (stats.cooldown) {
