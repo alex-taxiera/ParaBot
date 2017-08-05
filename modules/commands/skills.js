@@ -3,7 +3,7 @@ const func = require('../common.js')
 const Class = require('../classes/')
 const req = require('request-promise')
 
-var baseReq = req.defaults({
+let baseReq = req.defaults({
   baseUrl: 'https://developer-paragon.epicgames.com/v1/',
   headers: { 'X-Epic-ApiKey': api.key },
   json: true
