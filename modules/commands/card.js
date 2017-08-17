@@ -14,13 +14,13 @@ let baseReq = req.defaults({
 module.exports = new Class.Command(
   'card',
   'Display card info (-outlander scout 5)',
-  ['level optional (default level is max)'],
+  ['level optional (default level is 1)'],
   function (msg, card, level) {
     baseReq(`card/${card}`)
     .then((response) => {
       let maxLevel = response.levels.length
       if (isNaN(level) || level > maxLevel || level < 0) {
-        level = maxLevel - 1
+        level = 1
       } else {
         level--
       }
