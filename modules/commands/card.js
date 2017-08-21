@@ -24,10 +24,11 @@ module.exports = new Class.Command(
       } else {
         level--
       }
+      let info = response.levels[level] // move this back down once iconImages has pictures again
 
       let embed = {
         description: `:heartbeat: [**${response.name}**](https://github.com/alex-taxiera/ParaBot)`,
-        thumbnail: { url: `${iconUrl}${response.iconImage}` },
+        thumbnail: { url: `https:${info.images.large}` },
         fields: [
           {name: 'Rarity', value: `${response.rarity}`, inline: true},
           {name: 'Affinity', value: `${response.affinity}`, inline: true}
@@ -57,7 +58,7 @@ module.exports = new Class.Command(
         cost += `${response.goldCost} Gold`
       }
       embed.fields.push({name: 'Cost', value: cost, inline: true})
-      let info = response.levels[level]
+
       let stats = ''
       let abilities = ''
       for (let stat in info.BasicAttributes) {
