@@ -61,24 +61,24 @@ module.exports = new Class.Command(
 
       let stats = ''
       let abilities = ''
-      for (let stat in info.BasicAttributes) {
+      info.basicAttributes.forEach((attribute) => {
         if (stats) {
           stats += '\n'
         }
-        stats += `${stat}: ${info.BasicAttributes[stat]}`
-      }
-      for (let ability in info.Abilities) {
+        stats += `${attribute.name}: ${attribute.value}`
+      })
+      info.abilities.forEach((ability) => {
         if (abilities) {
           abilities += '\n\n'
         }
-        abilities += `${ability}: ${info.Abilities[ability].description}`
-        if (info.Abilities[ability].cooldown) {
-          abilities += '\n' + info.Abilities[ability].cooldown
+        abilities += `**${ability.name}:** ${ability.description}`
+        if (ability.cooldown) {
+          abilities += `\n**Cooldown:** ${ability.cooldown.match(/> (.+)$/)[1]}`
         }
-        if (info.Abilities[ability].manacost) {
-          abilities += '\n' + info.Abilities[ability].manacost
+        if (ability.manacost) {
+          abilities += `\n**Mana Cost:** ${ability.manacost.match(/> (.+)$/)[1]}`
         }
-      }
+      })
       if (stats) {
         embed.fields.push({name: 'Stats', value: stats, inline: true})
       }
