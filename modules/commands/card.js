@@ -3,8 +3,6 @@ const func = require('../common.js')
 const Class = require('../classes/')
 const req = require('request-promise')
 
-const iconUrl = 'https://developer-paragon-cdn.epicgames.com/Images/'
-
 let baseReq = req.defaults({
   baseUrl: 'https://developer-paragon.epicgames.com/v1/',
   headers: { 'X-Epic-ApiKey': api.key },
