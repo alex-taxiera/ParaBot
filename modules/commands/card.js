@@ -35,19 +35,19 @@ module.exports = new Class.Command(
 
       let cost = ''
       if (response.intellectGemCost !== 0) {
-        cost += `${response.intellectGemCost} Intellect Gems`
+        cost += `${response.intellectGemCost} Intellect`
       }
       if (response.vitalityGemCost !== 0) {
         if (cost) {
           cost += '\n'
         }
-        cost += `${response.vitalityGemCost} Vitality Gems`
+        cost += `${response.vitalityGemCost} Vitality`
       }
       if (response.dexterityGemCost !== 0) {
         if (cost) {
           cost += '\n'
         }
-        cost += `${response.dexterityGemCost} Dexterity Gems`
+        cost += `${response.dexterityGemCost} Agility`
       }
       if (response.goldCost !== 0) {
         if (cost) {
@@ -59,24 +59,28 @@ module.exports = new Class.Command(
 
       let stats = ''
       let abilities = ''
-      info.basicAttributes.forEach((attribute) => {
-        if (stats) {
-          stats += '\n'
-        }
-        stats += `${attribute.name}: ${attribute.value}`
-      })
-      info.abilities.forEach((ability) => {
-        if (abilities) {
-          abilities += '\n\n'
-        }
-        abilities += `**${ability.name}:** ${ability.description}`
-        if (ability.cooldown) {
-          abilities += `\n**Cooldown:** ${ability.cooldown.match(/> (.+)$/)[1]}`
-        }
-        if (ability.manacost) {
-          abilities += `\n**Mana Cost:** ${ability.manacost.match(/> (.+)$/)[1]}`
-        }
-      })
+      if (info.basicAttributes) {
+        info.basicAttributes.forEach((attribute) => {
+          if (stats) {
+            stats += '\n'
+          }
+          stats += `${attribute.name}: ${attribute.value}`
+        })
+      }
+      if (info.abilities) {
+        info.abilities.forEach((ability) => {
+          if (abilities) {
+            abilities += '\n\n'
+          }
+          abilities += `**${ability.name}:** ${ability.description}`
+          if (ability.cooldown) {
+            abilities += `\n**Cooldown:** ${ability.cooldown.match(/> (.+)$/)[1]}`
+          }
+          if (ability.manacost) {
+            abilities += `\n**Mana Cost:** ${ability.manacost.match(/> (.+)$/)[1]}`
+          }
+        })
+      }
       if (stats) {
         embed.fields.push({name: 'Stats', value: stats, inline: true})
       }
