@@ -65,12 +65,13 @@ module.exports = {
     'attr:enar': '__Energy Armor__',
     'attr:shld': '__Shield__',
     'attr:spd': '__Speed__',
-    'attr:hpgen': '__Health Regen__',
-    'attr:mpgen': '__Mana Regen__',
+    'attr:hpreg': '__Health Regen__',
+    'attr:mpreg': '__Mana Regen__',
     'attr:mp': '__Mana__',
     'attr:hp': '__Health__',
     'attr:lfstl': '__Lifesteal__',
     'attr:physpen': '__Physical Penetration__',
-    'attr:enpen': '__Energy Penetration__'
+    'attr:enpen': '__Energy Penetration__',
+    'attr:cdr': '__Cooldown Reduction__'
   }
 }
