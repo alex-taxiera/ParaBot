@@ -41,6 +41,9 @@ module.exports = new Class.Command(
                   stats[p] += '/'
                 }
               }
+              for (let p in stats) {
+                console.log(p, stats[p])
+              }
             })
             skill += desc.replace(/\{(.+?)}/g, (match, p) => {
               if (stats[p]) {
