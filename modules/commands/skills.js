@@ -41,10 +41,12 @@ module.exports = new Class.Command(
                   stats[p] += '/'
                 }
               }
-              for (let p in stats) {
-                console.log(p, stats[p])
-              }
             })
+            for (let p in stats) {
+              if (stats[p].endsWith('/')) {
+                stats[p] += '0'
+              }
+            }
             skill += desc.replace(/\{(.+?)}/g, (match, p) => {
               if (stats[p]) {
                 return `${stats[p]}`
