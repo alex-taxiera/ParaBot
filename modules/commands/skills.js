@@ -36,7 +36,6 @@ module.exports = new Class.Command(
                 if (j === 0) {
                   stats[p] = ''
                 }
-                console.log(level[p])
                 stats[p] += `${level[p]}`
                 if (j !== (array.length - 1)) {
                   stats[p] += '/'
