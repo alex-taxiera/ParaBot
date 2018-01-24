@@ -1,5 +1,4 @@
 const api = require('../api.js')
-const func = require('../common.js')
 const Class = require('../classes/')
 const req = require('request-promise')
 
@@ -13,67 +12,57 @@ module.exports = new Class.Command(
   'skills',
   'Display a hero\'s ability info',
   ['hero name'],
-  function (msg, params) {
-    let str = ''
-    let fullParam = params.join(' ')
-    let hero = api.getHero(fullParam)
-    if (hero) {
-      baseReq(`hero/${hero}`)
-      .then((response) => {
+  async function ({ fullParam }) {
+    let heroId = api.getHero(fullParam)
+    if (heroId) {
+      try {
+        let { name, images, abilities } = await baseReq(`hero/${heroId}`)
         let embed = {
-          description: `:heartbeat: [**${response.name}**](https://github.com/alex-taxiera/ParaBot)`,
-          thumbnail: { url: `https:${response.images.icon}` },
+          description: `:heartbeat: [**${name}**](https://github.com/alex-taxiera/ParaBot)`,
+          thumbnail: { url: `https:${images.icon}` },
           fields: []
         }
-        response.abilities.forEach((ability, i) => {
-          if (i > 0) {
-            let skill = ''
-            let stats = {}
-            let desc = `${ability.shortDescription}`
-
-            ability.modifiersByLevel.forEach((level, j, array) => {
-              for (let p in level) {
-                if (j === 0) {
-                  stats[p] = ''
-                }
-                stats[p] += `${level[p]}`
-                if (j !== (array.length - 1)) {
-                  stats[p] += '/'
-                }
+        for (let i in abilities) {
+          let { name, type, shortDescription, modifiersByLevel } = abilities[i]
+          let mods = {}
+          for (const level of modifiersByLevel) {
+            for (const mod in level) {
+              if (!mods[mod]) {
+                mods[mod] = []
               }
-            })
-            for (let p in stats) {
-              if (stats[p].endsWith('/')) {
-                stats[p] += '0'
-              }
+              mods[mod].push(`${level[mod]}`)
             }
-            skill += desc.replace(/\{(.+?)}/g, (match, p) => {
-              if (stats[p]) {
-                return `${stats[p]}`
-              } else if (api.stringReplace[p]) {
-                return api.stringReplace[p]
-              } else {
-                func.log(`no attribute ${p}`, 'red')
-                return p
-              }
-            })
-            if (stats.cooldown) {
-              skill += `\r\n• **Cooldown:**\n\t${stats.cooldown}`
-            }
-            if (stats.energycost) {
-              skill += `\r\n• **Mana Cost:**\n\t${stats.energycost}`
-            }
-            embed.fields.push({name: `${ability.name} (${ability.type})`, value: skill})
           }
-        })
-        func.messageHandler(new Class.Response(msg, '', 300000, embed))
-      })
-      .catch((err) => {
-        func.log('error requesting hero data', 'red', err.message)
-      })
+          for (const mod in mods) {
+            if (mods[mod].length !== modifiersByLevel.length) {
+              mods[mod].push('/0')
+            }
+            mods[mod] = mods[mod].join('/')
+          }
+          let skill = shortDescription.replace(/\{(.+?)}/g, (match, mod) => {
+            if (mods[mod]) {
+              return `${mods[mod]}`
+            } else if (api.stringReplace[mod]) {
+              return api.stringReplace[mod]
+            } else {
+              console.error(`no attribute ${mod}`, 'red')
+              return mod
+            }
+          })
+          if (mods.cooldown) {
+            skill += `\r\n• **Cooldown:**\n\t${mods.cooldown}`
+          }
+          if (mods.energycost) {
+            skill += `\r\n• **Mana Cost:**\n\t${mods.energycost}`
+          }
+          embed.fields.push({ name: `${name} (${type})`, value: skill })
+        }
+        return { response: { embed }, delay: 300000 }
+      } catch (e) {
+        console.error(e)
+      }
     } else {
-      str = `No hero named ${fullParam}!`
-      return new Class.Response(msg, str)
+      return { response: `No hero named ${fullParam}!` }
     }
   }
 )

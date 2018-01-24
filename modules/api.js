@@ -1,4 +1,3 @@
-const func = require('./common.js')
 const config = require('../config.json')
 const req = require('request-promise')
 
@@ -19,19 +18,14 @@ module.exports = {
       response.forEach((hero) => {
         heroes.set(hero.name.toLowerCase(), hero.id)
       })
-    })
-    .catch((err) => {
-      func.log('error getting heroes', 'red', err.message)
-    })
+    }).catch(console.error)
+
     baseReq('cards')
     .then((response) => {
       response.forEach((card) => {
         cards.set(card.name.toLowerCase(), card.id)
       })
-    })
-    .catch((err) => {
-      func.log('error getting cards', 'red', err.message)
-    })
+    }).catch(console.error)
   },
   getHero: function (query) {
     let iter = heroes.keys()
@@ -44,7 +38,6 @@ module.exports = {
     }
   },
   getCard: function (query) {
-    query = query.join(' ')
     let iter = cards.keys()
     let tmp = iter.next().value
     while (tmp) {

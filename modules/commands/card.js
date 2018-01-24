@@ -1,5 +1,4 @@
 const api = require('../api.js')
-const func = require('../common.js')
 const Class = require('../classes/')
 const req = require('request-promise')
 
@@ -13,87 +12,73 @@ module.exports = new Class.Command(
   'card',
   'Display card info (-outlander scout 5)',
   ['level optional (default level is 1)'],
-  function (msg, card, level) {
-    baseReq(`card/${card}`)
-    .then((response) => {
-      let maxLevel = response.levels.length
+  async function (cardId, level) {
+    try {
+      let card = await baseReq(`card/${cardId}`)
+      let maxLevel = card.levels.length
       if (isNaN(level) || level > maxLevel || level < 0) {
         level = 0
       } else {
         level--
       }
-      let info = response.levels[level] // move this back down once iconImages has pictures again
+      let info = card.levels[level] // move this back down once iconImages has pictures again
 
       let embed = {
-        description: `:heartbeat: [**${response.name}**](https://github.com/alex-taxiera/ParaBot)`,
+        description: `:heartbeat: [**${card.name}**](https://github.com/alex-taxiera/ParaBot)`,
         thumbnail: { url: `https:${info.images.large}` },
         fields: [
-          {name: 'Rarity', value: `${response.rarity}`, inline: true},
-          {name: 'Affinity', value: `${response.affinity}`, inline: true}
+          {name: 'Rarity', value: `${card.rarity}`, inline: true},
+          {name: 'Affinity', value: `${card.affinity}`, inline: true}
         ]
       }
 
-      let cost = ''
-      if (response.intellectGemCost !== 0) {
-        cost += `${response.intellectGemCost} Intellect`
+      let cost = []
+      if (card.intellectGemCost !== 0) {
+        cost.push(`${card.intellectGemCost} Intellect`)
       }
-      if (response.vitalityGemCost !== 0) {
-        if (cost) {
-          cost += '\n'
-        }
-        cost += `${response.vitalityGemCost} Vitality`
+      if (card.vitalityGemCost !== 0) {
+        cost.push(`${card.vitalityGemCost} Vitality`)
       }
-      if (response.dexterityGemCost !== 0) {
-        if (cost) {
-          cost += '\n'
-        }
-        cost += `${response.dexterityGemCost} Agility`
+      if (card.dexterityGemCost !== 0) {
+        cost.push(`${card.dexterityGemCost} Agility`)
       }
-      if (response.goldCost !== 0) {
-        if (cost) {
-          cost += '\n'
-        }
-        cost += `${response.goldCost} Gold`
+      if (card.goldCost !== 0) {
+        cost.push(`${card.goldCost} Gold`)
       }
-      embed.fields.push({name: 'Cost', value: cost, inline: true})
+      embed.fields.push({ name: 'Cost', value: cost.join('\n'), inline: true })
 
-      let stats = ''
-      let abilities = ''
+      let stats = []
+      let abilities = []
       if (info.basicAttributes) {
         info.basicAttributes.forEach((attribute) => {
-          if (stats) {
-            stats += '\n'
-          }
-          stats += `${attribute.name}: ${attribute.value}`
+          stats.push(`${attribute.name}: ${attribute.value}`)
         })
       }
       if (info.abilities) {
         info.abilities.forEach((ability) => {
-          if (abilities) {
-            abilities += '\n\n'
-          }
-          abilities += `**${ability.name}:** ${ability.description}`
+          let skill = `**${ability.name}:** ${ability.description}`
           if (ability.cooldown) {
-            abilities += `\n**Cooldown:** ${ability.cooldown.match(/> (.+)$/)[1]}`
+            skill += `\n**Cooldown:** ${ability.cooldown.match(/> (.+)$/)[1]}`
           }
           if (ability.manacost) {
-            abilities += `\n**Mana Cost:** ${ability.manacost.match(/> (.+)$/)[1]}`
+            skill += `\n**Mana Cost:** ${ability.manacost.match(/> (.+)$/)[1]}`
           }
+          abilities.push(skill)
         })
       }
       if (stats) {
-        embed.fields.push({name: 'Stats', value: stats, inline: true})
+        embed.fields.push({ name: 'Stats', value: stats.join('\n'), inline: true })
       }
-      if (response.trait !== 'None') {
-        embed.fields.push({name: 'Trait', value: response.trait, inline: true})
+      if (card.trait !== 'None') {
+        embed.fields.push({ name: 'Trait', value: card.trait, inline: true })
       }
       if (abilities) {
-        embed.fields.push({name: 'Abilities', value: abilities})
+        embed.fields.push({ name: 'Abilities', value: abilities.join('\n\n') })
       }
-      return func.messageHandler(new Class.Response(msg, '', 300000, embed))
-    })
-    .catch(err => {
-      func.log(`error requesting card ${card}`, 'red', err.message)
-    })
+      return { response: { embed }, delay: 300000 }
+    } catch (e) {
+      console.error(e)
+      return { response: `error requesting card data for ${cardId}` }
+    }
   }
 )
