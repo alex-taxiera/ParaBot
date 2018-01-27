@@ -1,5 +1,7 @@
 const config = require('../config.json')
 const req = require('request-promise')
+// const fs = require('fs')
+// const request = require('request')
 
 let baseReq = req.defaults({
   baseUrl: 'https://developer-paragon.epicgames.com/v1/',
@@ -10,6 +12,16 @@ let baseReq = req.defaults({
 let heroes = new Map()
 let cards = new Map()
 
+// let imageDownload = function (uri, filename, callback) {
+//   request.head(uri, function (err, res, body) {
+//     if (err) console.log(err)
+//     console.log('content-type:', res.headers['content-type'])
+//     console.log('content-length:', res.headers['content-length'])
+//
+//     request(uri).pipe(fs.createWriteStream(filename)).on('close', callback)
+//   })
+// }
+
 module.exports = {
   key: config.paragonKey,
   buildMaps: function () {
@@ -19,6 +31,19 @@ module.exports = {
         heroes.set(hero.name.toLowerCase(), hero.id)
       })
     }).catch(console.error)
+
+    // baseReq('gem/complete')
+    // .then((response) => {
+    //   response.forEach((gem) => {
+    //     fs.mkdir(`./data/gem_images/${gem.name.toLowerCase()}`, () => {
+    //       for (let i = 0; i < gem.levelInfo.length; i++) {
+    //         imageDownload(`https:${gem.levelInfo[i].fullGemImages.large}`, `./data/gem_images/${gem.name.toLowerCase()}/${i + 1}.png`, function () {
+    //           console.log('done')
+    //         })
+    //       }
+    //     })
+    //   })
+    // }).catch(console.error)
 
     baseReq('cards')
     .then((response) => {

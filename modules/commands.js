@@ -33,7 +33,7 @@ module.exports.handleCommand = async function (msg, { prefix }, bot) {
   }
 }
 
-async function response (msg, { response, delay = 10000 }) {
+function response (msg, { response, delay = 10000 }) {
   if (!response.embed) { response = `${msg.author.mention} ${response}` }
   msg.channel.createMessage(response)
   .then((m) => { setTimeout(() => { m.delete() }, delay) })
