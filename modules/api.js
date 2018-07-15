@@ -4,13 +4,13 @@ const req = require('request-promise')
 // const request = require('request')
 
 let baseReq = req.defaults({
-  baseUrl: 'https://developer-paragon.epicgames.com/v1/',
-  headers: { 'X-Epic-ApiKey': config.paragonKey },
+  baseUrl: 'https://paragoneapi.com/v1/',
+  // headers: { 'X-Epic-ApiKey': config.paragonKey },
   json: true
 })
 
-let heroes = new Map()
-let cards = new Map()
+const heroes = []
+const cards = []
 /* IMAGE DOWNLOADER */
 // let imageDownload = function (uri, filename, callback) {
 //   request.head(uri, function (err, res, body) {
@@ -28,7 +28,7 @@ module.exports = {
     baseReq('heroes')
     .then((response) => {
       response.forEach((hero) => {
-        heroes.set(hero.name.toLowerCase(), hero.id)
+        heroes.push(hero.name)
       })
     }).catch(console.error)
     /* GEM DOWNLOADER */
@@ -44,33 +44,36 @@ module.exports = {
     //     })
     //   })
     // }).catch(console.error)
-    /* OLD API REQUEST */
-    // baseReq('cards')
-    // .then((response) => {
-    //   response.forEach((card) => {
-    //     cards.set(card.name.toLowerCase(), card.id)
-    //   })
-    // }).catch(console.error)
+    baseReq('cards')
+    .then((response) => {
+      response.forEach((card) => {
+        cards.push(card.name)
+      })
+    }).catch(console.error)
   },
   getHero: function (query) {
-    let iter = heroes.keys()
-    let tmp = iter.next().value
-    while (tmp) {
-      if (tmp.startsWith(query)) {
-        return heroes.get(tmp)
-      }
-      tmp = iter.next().value
-    }
+    const hero = heroes.filter((hero) => hero.startsWith(query))
+    if (hero.length > 0) return hero[0]
+    // let iter = heroes.keys()
+    // let tmp = iter.next().value
+    // while (tmp) {
+    //   if (tmp.startsWith(query)) {
+    //     return heroes.get(tmp)
+    //   }
+    //   tmp = iter.next().value
+    // }
   },
   getCard: function (query) {
-    let iter = cards.keys()
-    let tmp = iter.next().value
-    while (tmp) {
-      if (tmp.startsWith(query)) {
-        return cards.get(tmp)
-      }
-      tmp = iter.next().value
-    }
+    const card = cards.filter((hero) => hero.startsWith(query))
+    if (card.length > 0) return card[0]
+    // let iter = cards.keys()
+    // let tmp = iter.next().value
+    // while (tmp) {
+    //   if (tmp.startsWith(query)) {
+    //     return cards.get(tmp)
+    //   }
+    //   tmp = iter.next().value
+    // }
   },
   stringReplace: {
     'status:stun': '__Stun__',
