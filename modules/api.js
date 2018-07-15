@@ -11,7 +11,7 @@ let baseReq = req.defaults({
 
 let heroes = new Map()
 let cards = new Map()
-
+/* IMAGE DOWNLOADER */
 // let imageDownload = function (uri, filename, callback) {
 //   request.head(uri, function (err, res, body) {
 //     if (err) console.log(err)
@@ -31,7 +31,7 @@ module.exports = {
         heroes.set(hero.name.toLowerCase(), hero.id)
       })
     }).catch(console.error)
-
+    /* GEM DOWNLOADER */
     // baseReq('gem/complete')
     // .then((response) => {
     //   response.forEach((gem) => {
@@ -44,13 +44,13 @@ module.exports = {
     //     })
     //   })
     // }).catch(console.error)
-
-    baseReq('cards')
-    .then((response) => {
-      response.forEach((card) => {
-        cards.set(card.name.toLowerCase(), card.id)
-      })
-    }).catch(console.error)
+    /* OLD API REQUEST */
+    // baseReq('cards')
+    // .then((response) => {
+    //   response.forEach((card) => {
+    //     cards.set(card.name.toLowerCase(), card.id)
+    //   })
+    // }).catch(console.error)
   },
   getHero: function (query) {
     let iter = heroes.keys()
