@@ -1,10 +1,11 @@
 const api = require('../api.js')
 const Class = require('../classes/')
 const req = require('request-promise')
+const images = 'https://www.paragoneapi.com/images/cards/'
 
 let baseReq = req.defaults({
-  baseUrl: 'https://developer-paragon.epicgames.com/v1/',
-  headers: { 'X-Epic-ApiKey': api.key },
+  baseUrl: 'https://www.paragoneapi.com/v1/',
+  // headers: { 'X-Epic-ApiKey': api.key },
   json: true
 })
 
@@ -12,20 +13,17 @@ module.exports = new Class.Command(
   'card',
   'Display card info (-outlander scout 5)',
   ['level optional (default level is 1)'],
-  async function (cardId, level) {
+  async function (cardName, level) {
     try {
-      let card = await baseReq(`card/${cardId}`)
+      let card = await baseReq(`cards/${cardName}`)
       let maxLevel = card.levels.length
-      if (isNaN(level) || level > maxLevel || level < 0) {
-        level = 0
-      } else {
-        level--
+      if (isNaN(level) || level > maxLevel || level < 1) {
+        level = 1
       }
-      let info = card.levels[level] // move this back down once iconImages has pictures again
 
       let embed = {
         description: `:heartbeat: [**${card.name}**](https://github.com/alex-taxiera/ParaBot)`,
-        thumbnail: { url: `https:${info.images.large}` },
+        thumbnail: { url: encodeURI(`${images}${cardName}/${level}.png`) },
         fields: [
           {name: 'Rarity', value: `${card.rarity}`, inline: true},
           {name: 'Affinity', value: `${card.affinity}`, inline: true}
@@ -47,6 +45,7 @@ module.exports = new Class.Command(
       }
       embed.fields.push({ name: 'Cost', value: cost.join('\n'), inline: true })
 
+      let info = card.levels[level - 1] // move this back down once iconImages has pictures again
       let stats = []
       let abilities = []
       if (info.basicAttributes) {
@@ -78,7 +77,7 @@ module.exports = new Class.Command(
       return { response: { embed }, delay: 300000 }
     } catch (e) {
       console.error(e)
-      return { response: `error requesting card data for ${cardId}` }
+      return { response: `error requesting card data for ${cardName}` }
     }
   }
 )

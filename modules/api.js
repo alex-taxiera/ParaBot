@@ -4,7 +4,7 @@ const req = require('request-promise')
 // const request = require('request')
 
 let baseReq = req.defaults({
-  baseUrl: 'https://paragoneapi.com/v1/',
+  baseUrl: 'https://www.paragoneapi.com/v1/',
   // headers: { 'X-Epic-ApiKey': config.paragonKey },
   json: true
 })
@@ -28,7 +28,7 @@ module.exports = {
     baseReq('heroes')
     .then((response) => {
       response.forEach((hero) => {
-        heroes.push(hero.name)
+        heroes.push(hero.name.toLowerCase())
       })
     }).catch(console.error)
     /* GEM DOWNLOADER */
@@ -47,7 +47,7 @@ module.exports = {
     baseReq('cards')
     .then((response) => {
       response.forEach((card) => {
-        cards.push(card.name)
+        cards.push(card.name.toLowerCase())
       })
     }).catch(console.error)
   },

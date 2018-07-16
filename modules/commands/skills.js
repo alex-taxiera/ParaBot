@@ -1,10 +1,11 @@
 const api = require('../api.js')
 const Class = require('../classes/')
 const req = require('request-promise')
+const images = 'https://www.paragoneapi.com/images/heroes/'
 
 let baseReq = req.defaults({
-  baseUrl: 'https://developer-paragon.epicgames.com/v1/',
-  headers: { 'X-Epic-ApiKey': api.key },
+  baseUrl: 'https://www.paragoneapi.com/v1/',
+  // headers: { 'X-Epic-ApiKey': api.key },
   json: true
 })
 
@@ -13,13 +14,13 @@ module.exports = new Class.Command(
   'Display a hero\'s ability info',
   ['hero name'],
   async function ({ fullParam }) {
-    let heroId = api.getHero(fullParam)
-    if (heroId) {
+    let heroName = api.getHero(fullParam)
+    if (heroName) {
       try {
-        let { name, images, abilities } = await baseReq(`hero/${heroId}`)
+        let { name, abilities } = await baseReq(`heroes/full/${heroName}`)
         let embed = {
           description: `:heartbeat: [**${name}**](https://github.com/alex-taxiera/ParaBot)`,
-          thumbnail: { url: `https:${images.icon}` },
+          thumbnail: { url: encodeURI(`${images}${heroName}.png`) },
           fields: []
         }
         for (let i in abilities) {
