@@ -8,13 +8,13 @@ module.exports.handleCommand = async function (msg, { prefix }, bot) {
     let fullParam = msg.content.substring(prefix.length)
     let params = fullParam.split(' ')
     if (!isNaN(params[params.length - 1])) { var level = params.pop() }
-    let heroId = api.getHero(fullParam)
-    let cardId = api.getCard(fullParam)
+    let fullHeroName = api.getHero(fullParam)
+    let fullCardName = api.getCard(fullParam)
 
-    if (heroId) {
-      response(msg, await commands['hero'].execute(heroId))
-    } else if (cardId) {
-      response(msg, await commands['card'].execute(cardId, level))
+    if (fullHeroName) {
+      response(msg, await commands['hero'].execute(fullHeroName))
+    } else if (fullCardName) {
+      response(msg, await commands['card'].execute(fullCardName, level))
     }
 
     // else
