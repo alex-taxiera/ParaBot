@@ -1,5 +1,0 @@
-exports.help = require('./help.js')
-exports.card = require('./card.js')
-exports.hero = require('./hero.js')
-exports.stats = require('./stats.js')
-exports.skills = require('./skills.js')

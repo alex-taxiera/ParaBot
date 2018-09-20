@@ -1,0 +1,5 @@
+const ParaBot = require('./src/ParaBot/ParaBot.js')
+const defaultSettings = require('./config/settings.json')
+require('dotenv').load()
+const bot = new ParaBot({ sourceFolder: './src', defaultSettings })
+bot.connect()

@@ -1,32 +1,29 @@
-const api = require('../api.js')
-const Class = require('../classes/')
-const req = require('request-promise')
-const images = 'https://www.paragoneapi.com/images/cards/'
+const { Command } = require('eris-boiler')
 
-let baseReq = req.defaults({
-  baseUrl: 'https://www.paragoneapi.com/v1/',
-  // headers: { 'X-Epic-ApiKey': api.key },
-  json: true
-})
-
-module.exports = new Class.Command(
-  'card',
-  'Display card info (-outlander scout 5)',
-  ['level optional (default level is 1)'],
-  async function (cardName, level) {
-    try {
-      let card = await baseReq(`cards/${cardName}`)
-      let maxLevel = card.levels.length
+module.exports = (bot) => new Command(
+  bot,
+  {
+    name: 'card',
+    description: 'Display card info (outlander scout 5)',
+    options: {
+      deleteResponseDelay: 30000
+    },
+    run: async function ({ bot, msg, params }) {
+      let level = 1
+      if (!isNaN(params[params.length - 1])) level = params.pop()
+      const cardName = params.join(' ')
+      const card = await bot.API.getCard(cardName)
+      const maxLevel = card.levels.length
       if (isNaN(level) || level > maxLevel || level < 1) {
         level = 1
       }
-
-      let embed = {
+      const inline = true
+      const embed = {
         description: `:heartbeat: [**${card.name}**](https://github.com/alex-taxiera/ParaBot)`,
-        thumbnail: { url: encodeURI(`${images}${cardName}/${level}.png`) },
+        thumbnail: { url: bot.API.getCardImage(cardName, level) },
         fields: [
-          {name: 'Rarity', value: `${card.rarity}`, inline: true},
-          {name: 'Affinity', value: `${card.affinity}`, inline: true}
+          { name: 'Rarity', value: `${card.rarity}`, inline },
+          { name: 'Affinity', value: `${card.affinity}`, inline }
         ]
       }
 
@@ -43,7 +40,7 @@ module.exports = new Class.Command(
       if (card.goldCost !== 0) {
         cost.push(`${card.goldCost} Gold`)
       }
-      embed.fields.push({ name: 'Cost', value: cost.join('\n'), inline: true })
+      embed.fields.push({ name: 'Cost', value: cost.join('\n'), inline })
 
       let info = card.levels[level - 1] // move this back down once iconImages has pictures again
       let stats = []
@@ -66,18 +63,15 @@ module.exports = new Class.Command(
         })
       }
       if (stats) {
-        embed.fields.push({ name: 'Stats', value: stats.join('\n'), inline: true })
+        embed.fields.push({ name: 'Stats', value: stats.join('\n'), inline })
       }
       if (card.trait !== 'None') {
-        embed.fields.push({ name: 'Trait', value: card.trait, inline: true })
+        embed.fields.push({ name: 'Trait', value: card.trait, inline })
       }
       if (abilities) {
         embed.fields.push({ name: 'Abilities', value: abilities.join('\n\n') })
       }
-      return { response: { embed }, delay: 300000 }
-    } catch (e) {
-      console.error(e)
-      return { response: `error requesting card data for ${cardName}` }
+      return { embed }
     }
   }
 )

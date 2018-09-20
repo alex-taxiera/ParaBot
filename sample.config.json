@@ -1,6 +1,0 @@
-{
-  "prefix": "+",
-  "token": "bot_token",
-  "paragonKey": "paragon_api_key",
-  "games": ["Paragon", "Fortnite", "Unreal Tournament", "Shadow Complex"]
-}
