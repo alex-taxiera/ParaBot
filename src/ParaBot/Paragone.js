@@ -2,29 +2,26 @@ var https = require('https')
 
 class Paragone {
   constructor () {
-    this._host = 'www.paragoneapi.com'
+    this._host = 'paragoneapi.com'
     this._apiRoute = '/v1/'
-    this._images = 'https://www.paragoneapi.com/images/'
-    this._heroes = []
-    this._cards = []
-    this._cache = {
-      'heroes': new Map(),
-      'cards': new Map()
+    this._store = {
+      heroes: {},
+      cards: {}
     }
-    this.getRequest('heroes')
-      .then((heroes) =>
-        heroes.forEach((hero) => {
-          this._heroes.push(hero.name.toLowerCase())
-        })
-      )
-      .catch((error) => console.error('heroes', error))
-    this.getRequest('cards')
-      .then((cards) =>
-        cards.forEach((card) =>
-          this._cards.push(card.name.toLowerCase())
+    this._cache = {
+      heroes: new Map(),
+      cards: new Map()
+    }
+
+    Object.keys(this._store).forEach((key) =>
+      this._getRequest(key)
+        .then((items) =>
+          items.forEach((item) => {
+            this._store[key][item.name.toLowerCase()] = item.id
+          })
         )
-      )
-      .catch((error) => console.error('cards', error))
+        .catch((error) => console.error(key, error)))
+    
     this.stringReplace = {
       'status:stun': '__Stun__',
       'status:root': '__Root__',
@@ -47,40 +44,38 @@ class Paragone {
     }
   }
 
+  getHero (query) {
+    return this._getItem('heroes', query.toLowerCase())
+  }
+
   getHeroName (query) {
-    return this._heroes.filter((hero) => hero.startsWith(query))[0] || undefined
+    return this._getItemName('heroes', query.toLowerCase())
+  }
+
+  getCard (query) {
+    return this._getItem('cards', query.toLowerCase())
   }
 
   getCardName (query) {
-    return this._cards.filter((card) => card.startsWith(query))[0] || undefined
+    return this._getItemName('cards', query.toLowerCase())
   }
 
-  getHeroImage (name) {
-    return encodeURI(`${this._images}heroes/${this.getHeroName(name)}.png`)
-  }
-
-  getCardImage (name, level) {
-    return encodeURI(`${this._images}cards/${this.getCardName(name)}/${level}.png`)
-  }
-
-  getHero (name, full) {
-    return this.getItem('heroes', 'full/' + this.getHeroName(name))
-  }
-
-  getCard (name) {
-    return this.getItem('cards', this.getCardName(name))
-  }
-
-  async getItem (type, name) {
-    let item = this._cache[type].get(name)
+  async _getItem (type, query) {
+    const store = this._store[type]
+    const id = store[this._getItemName(type, query)]
+    let item = this._cache[type].get(id)
     if (!item) {
-      item = await this.getRequest(`${type}/${name}`)
-      this._cache[type].set(name, item)
+      item = await this._getRequest(`${type}/${id}`)
+      this._cache[type].set(item.id, item)
     }
     return item
   }
 
-  getRequest (path) {
+  _getItemName (type, query) {
+    return Object.keys(this._store[type]).find((key) => key.startsWith(query))
+  }
+
+  _getRequest (path) {
     path = encodeURI(this._apiRoute + path)
     return new Promise((resolve, reject) =>
       https.get({ host: this._host, path }, (results) => {
@@ -88,10 +83,10 @@ class Paragone {
         results
           .on('data', (chunk) => chunks.push(chunk))
           .on('end', () => {
-            const thing = JSON.parse(Buffer.concat(chunks))
+            const json = JSON.parse(Buffer.concat(chunks))
             results.statusCode === 200
-              ? resolve(thing)
-              : reject(thing)
+              ? resolve(json)
+              : reject(json)
           })
       }).on('error', reject)
     )

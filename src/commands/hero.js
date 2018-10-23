@@ -20,7 +20,7 @@ module.exports = (bot) => new Command(
       const inline = true
       const embed = {
         description: `:heartbeat: [**${hero.name}**](https://github.com/alex-taxiera/ParaBot)`,
-        thumbnail: { url: bot.API.getHeroImage(heroName) },
+        thumbnail: { url: hero.icon },
         fields: [
           { name: 'Type', value: `${hero.attack}`, inline },
           { name: 'Affinities', value: `${hero.affinities.join(', ')}`, inline },

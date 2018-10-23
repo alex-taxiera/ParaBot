@@ -20,7 +20,7 @@ module.exports = (bot) => new Command(
       const { name, abilities } = hero
       const embed = {
         description: `:heartbeat: [**${name}**](https://github.com/alex-taxiera/ParaBot)`,
-        thumbnail: { url: bot.API.getHeroImage(heroName) },
+        thumbnail: { url: hero.icon },
         fields: []
       }
       for (const i in abilities) {

@@ -20,7 +20,7 @@ module.exports = (bot) => new Command(
       const inline = true
       const embed = {
         description: `:heartbeat: [**${card.name}**](https://github.com/alex-taxiera/ParaBot)`,
-        thumbnail: { url: bot.API.getCardImage(cardName, level) },
+        thumbnail: { url: card.images[level - 1] },
         fields: [
           { name: 'Rarity', value: `${card.rarity}`, inline },
           { name: 'Affinity', value: `${card.affinity}`, inline }
@@ -42,7 +42,7 @@ module.exports = (bot) => new Command(
       }
       embed.fields.push({ name: 'Cost', value: cost.join('\n'), inline })
 
-      let info = card.levels[level - 1] // move this back down once iconImages has pictures again
+      let info = card.levels[level - 1]
       let stats = []
       let abilities = []
       if (info.basicAttributes) {
